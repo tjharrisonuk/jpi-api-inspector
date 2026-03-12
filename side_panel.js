@@ -37,12 +37,57 @@ function syntaxHighlight(json) {
   );
 }
 
+// ── Ad Config extraction ──────────────────────────────────────────────────────
+
+// Recursively searches obj for a key named "adConfig" whose value is a number
+// or numeric string (i.e. the ID itself, not a nested object).
+function findAdConfigId(obj, depth = 0) {
+  if (!obj || typeof obj !== 'object' || depth > 10) return null;
+
+  if ('adConfig' in obj) {
+    const val = obj.adConfig;
+    if (typeof val === 'number') return String(val);
+    if (typeof val === 'string' && /^\d+$/.test(val)) return val;
+  }
+
+  for (const val of Object.values(obj)) {
+    if (Array.isArray(val)) {
+      for (const item of val) {
+        const found = findAdConfigId(item, depth + 1);
+        if (found) return found;
+      }
+    } else if (val && typeof val === 'object') {
+      const found = findAdConfigId(val, depth + 1);
+      if (found) return found;
+    }
+  }
+
+  return null;
+}
+
+function renderAdConfigCard(adConfigId, currentEnv) {
+  const card = $('adconfig-card');
+  if (!adConfigId) {
+    card.hidden = true;
+    return;
+  }
+
+  $('adconfig-id').textContent = `#${adConfigId}`;
+  $('adconfig-link-prod').href =
+    `https://jpi-api-prod.brightsites.co.uk/api/ad-config/${adConfigId}`;
+  $('adconfig-link-dev').href =
+    `https://jpi-api-dev.brightsites.co.uk/api/ad-config/${adConfigId}`;
+  card.hidden = false;
+}
+
 // ── State helpers ─────────────────────────────────────────────────────────────
 
 function showState(name) {
   ['empty', 'loading', 'error', 'result'].forEach((s) => {
     $(`state-${s}`).hidden = s !== name;
   });
+  // Hide adConfig card whenever we're not showing a result
+  if (name !== 'result') $('adconfig-card').hidden = true;
 }
 
 // ── Main fetch & render ───────────────────────────────────────────────────────
@@ -87,6 +132,10 @@ async function loadApiResponse(request) {
     statusEl.textContent = response.status;
     statusEl.className = `status-badge ${response.ok ? 'status-ok' : 'status-error'}`;
     $('response-time').textContent = `${elapsed}ms`;
+
+    // Ad Config quick link
+    const adConfigId = isJson ? findAdConfigId(data) : null;
+    renderAdConfigCard(adConfigId, env);
 
     // Render JSON
     if (isJson) {
