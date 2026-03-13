@@ -84,14 +84,28 @@ function renderAdConfigCard(adConfigId, currentEnv) {
   card.hidden = false;
 }
 
+// ── Publication link ──────────────────────────────────────────────────────────
+
+function renderPublicationCard(domain, currentEnv) {
+  const url = `https://jpi-api-${currentEnv}.brightsites.co.uk/api/publications/${domain}`;
+  const link = $('publication-link');
+  link.href = url;
+  link.className = `btn-adconfig ${currentEnv}`;
+  $('publication-domain').textContent = domain;
+  $('publication-card').hidden = false;
+}
+
 // ── State helpers ─────────────────────────────────────────────────────────────
 
 function showState(name) {
   ['empty', 'loading', 'error', 'result'].forEach((s) => {
     $(`state-${s}`).hidden = s !== name;
   });
-  // Hide adConfig card whenever we're not showing a result
-  if (name !== 'result') $('adconfig-card').hidden = true;
+  // Hide quick-link cards whenever we're not showing a result
+  if (name !== 'result') {
+    $('adconfig-card').hidden = true;
+    $('publication-card').hidden = true;
+  }
 }
 
 // ── Main fetch & render ───────────────────────────────────────────────────────
@@ -136,6 +150,9 @@ async function loadApiResponse(request) {
     statusEl.textContent = response.status;
     statusEl.className = `status-badge ${response.ok ? 'status-ok' : 'status-error'}`;
     $('response-time').textContent = `${elapsed}ms`;
+
+    // Publication quick link
+    renderPublicationCard(domain, env);
 
     // Ad Config quick link
     const adConfigId = isJson ? findAdConfigId(data) : null;
