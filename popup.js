@@ -21,6 +21,7 @@ async function openJsGlobalsInPanel(tabId, domain, path) {
   try {
     const results = await chrome.scripting.executeScript({
       target: { tabId },
+      world: 'MAIN',
       func: () => {
         try { return JSON.parse(JSON.stringify(window.JSGlobals)); } catch { return null; }
       },
@@ -97,6 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const results = await chrome.scripting.executeScript({
           target: { tabId: tab.id },
+          world: 'MAIN',
           func: () => window.JSGlobals && window.JSGlobals.domain,
         });
         domain = results?.[0]?.result || null;
