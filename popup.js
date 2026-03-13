@@ -16,6 +16,34 @@ function buildApiUrl(env, domain, path) {
   return `https://jpi-api-${env}.brightsites.co.uk/api/${domain}?path=${encodeURIComponent(path)}`;
 }
 
+async function openJsGlobalsInPanel(tabId, domain, path) {
+  let data = null;
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => {
+        try { return JSON.parse(JSON.stringify(window.JSGlobals)); } catch { return null; }
+      },
+    });
+    data = results?.[0]?.result ?? null;
+  } catch {
+    data = null;
+  }
+
+  await chrome.storage.local.set({
+    apiRequest: {
+      type: 'jsglobals',
+      data,
+      domain,
+      path,
+      timestamp: Date.now(),
+    },
+  });
+
+  await chrome.sidePanel.open({ tabId });
+  window.close();
+}
+
 async function openApiInPanel(env, domain, path, tabId) {
   const apiUrl = buildApiUrl(env, domain, path);
 
@@ -100,5 +128,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
   $('btn-dev').addEventListener('click', () =>
     openApiInPanel('dev', domain, path, tab.id)
+  );
+  $('btn-jsglobals').addEventListener('click', () =>
+    openJsGlobalsInPanel(tab.id, domain, path)
   );
 });

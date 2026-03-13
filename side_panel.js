@@ -225,17 +225,44 @@ async function loadApiResponse(request) {
   if (!request) return;
   currentRequest = request;
 
-  const { url, env, domain, path } = request;
+  const { type, domain, path } = request;
 
-  // Update header
+  // Update header meta
+  $('meta-domain').textContent = domain;
+  $('meta-path').textContent   = path;
+  $('meta-section').hidden     = false;
+
+  // ── JSGlobals display (no fetch needed) ────────────────────────────────────
+  if (type === 'jsglobals') {
+    const badge = $('env-badge');
+    badge.textContent = 'GLOBALS';
+    badge.className   = 'env-badge globals';
+    badge.hidden      = false;
+
+    $('status-badge').textContent = '';
+    $('status-badge').className   = 'status-badge';
+    $('response-time').textContent = '';
+
+    const contentEl = $('json-content');
+    contentEl.innerHTML = '';
+
+    if (request.data !== null && request.data !== undefined) {
+      contentEl.appendChild(renderJsonTree(request.data));
+    } else {
+      contentEl.textContent = 'JSGlobals is not defined on this page.';
+    }
+
+    showState('result');
+    return;
+  }
+
+  // ── API response (fetch) ───────────────────────────────────────────────────
+  const { url, env } = request;
+
   const badge = $('env-badge');
   badge.textContent = env.toUpperCase();
   badge.className   = `env-badge ${env}`;
   badge.hidden      = false;
-
-  $('meta-domain').textContent = domain;
-  $('meta-path').textContent   = path;
-  $('meta-section').hidden     = false;
 
   showState('loading');
 

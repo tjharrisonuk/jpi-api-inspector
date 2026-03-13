@@ -148,6 +148,17 @@
       color: white;
     }
 
+    .btn-globals {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .actions-divider {
+      border: none;
+      border-top: 1px solid #f1f5f9;
+      margin: 4px 0;
+    }
+
     .btn-label {
       display: flex;
       flex-direction: column;
@@ -281,6 +292,16 @@
         <div class="btn-label">
           <span class="btn-env">Development</span>
           <span class="btn-desc">jpi-api-dev.brightsites.co.uk</span>
+        </div>
+        <span class="btn-arrow">→</span>
+      </button>
+
+      <hr class="actions-divider" />
+      <div class="actions-label">Page data</div>
+      <button class="btn btn-globals" id="btn-jsglobals">
+        <div class="btn-label">
+          <span class="btn-env">JSGlobals</span>
+          <span class="btn-desc">window.JSGlobals on this page</span>
         </div>
         <span class="btn-arrow">→</span>
       </button>
