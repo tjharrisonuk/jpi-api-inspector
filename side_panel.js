@@ -217,11 +217,25 @@ function showState(name) {
   }
 }
 
-// ── Main fetch & render ───────────────────────────────────────────────────────
+// ── Navigation history ────────────────────────────────────────────────────────
 
+const requestHistory = [];
 let currentRequest = null;
 
+function updateBackButton() {
+  $('btn-back').hidden = requestHistory.length === 0;
+}
+
+// Called when a brand-new request arrives from the popup — pushes the current
+// view onto the history stack first so the user can go back to it.
 async function loadApiResponse(request) {
+  if (currentRequest) requestHistory.push(currentRequest);
+  await renderRequest(request);
+  updateBackButton();
+}
+
+// Renders a request without touching history (used by back / refresh).
+async function renderRequest(request) {
   if (!request) return;
   currentRequest = request;
 
@@ -315,11 +329,20 @@ async function loadApiResponse(request) {
 $('btn-expand-all').addEventListener('click',   () => setAllCollapsed(false));
 $('btn-collapse-all').addEventListener('click', () => setAllCollapsed(true));
 
+// ── Back button ───────────────────────────────────────────────────────────────
+
+$('btn-back').addEventListener('click', async () => {
+  if (requestHistory.length === 0) return;
+  const previous = requestHistory.pop();
+  await renderRequest(previous);
+  updateBackButton();
+});
+
 // ── Refresh button ────────────────────────────────────────────────────────────
 
 $('btn-refresh').addEventListener('click', () => {
   if (currentRequest) {
-    loadApiResponse({ ...currentRequest, timestamp: Date.now() });
+    renderRequest({ ...currentRequest, timestamp: Date.now() });
   }
 });
 
@@ -335,7 +358,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 chrome.storage.local.get('apiRequest', ({ apiRequest }) => {
   if (apiRequest) {
-    loadApiResponse(apiRequest);
+    renderRequest(apiRequest);  // initial load — no history to push
   } else {
     showState('empty');
   }
