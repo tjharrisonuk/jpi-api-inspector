@@ -73,10 +73,14 @@ function renderAdConfigCard(adConfigId, currentEnv) {
   }
 
   $('adconfig-id').textContent = `#${adConfigId}`;
-  $('adconfig-link-prod').href =
-    `https://jpi-api-prod.brightsites.co.uk/api/ad-config/${adConfigId}`;
-  $('adconfig-link-dev').href =
-    `https://jpi-api-dev.brightsites.co.uk/api/ad-config/${adConfigId}`;
+
+  // Show only the link that matches the current environment
+  const url = `https://jpi-api-${currentEnv}.brightsites.co.uk/api/ad-config/${adConfigId}`;
+  const link = $('adconfig-link');
+  link.href = url;
+  link.className = `btn-adconfig ${currentEnv}`;
+  link.textContent = `${currentEnv === 'prod' ? 'Prod' : 'Dev'} Ad Config →`;
+
   card.hidden = false;
 }
 
