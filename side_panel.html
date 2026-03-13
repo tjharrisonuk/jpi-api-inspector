@@ -242,6 +242,26 @@
       color: #f87171;
     }
 
+    /* ── Tree controls ───────────────────────────────────────────────────── */
+    .btn-text {
+      background: none;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      padding: 0 8px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-text:hover {
+      background: #21262d;
+      color: #e6edf3;
+    }
+
     /* ── JSON viewer ─────────────────────────────────────────────────────── */
     .json-container {
       background: #161b22;
@@ -254,12 +274,53 @@
     .json-content {
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
       font-size: 12px;
-      line-height: 1.65;
-      white-space: pre;
-      tab-size: 2;
+      line-height: 1.7;
     }
 
-    /* Syntax highlighting */
+    /* Tree structure */
+    .json-tree { display: block; }
+
+    .json-collapsible { display: block; }
+
+    .json-header {
+      display: flex;
+      align-items: baseline;
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 0 2px;
+      margin: 0 -2px;
+    }
+
+    .json-header:hover { background: rgba(255,255,255,0.05); }
+
+    .json-toggle {
+      font-size: 8px;
+      color: #484f58;
+      width: 12px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .json-children {
+      padding-left: 1.4em;
+      border-left: 1px solid #21262d;
+      margin-left: 5px;
+    }
+
+    .json-footer { display: block; }
+
+    .json-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .json-preview {
+      color: #484f58;
+      font-style: italic;
+    }
+
+    /* Syntax colouring */
     .json-key    { color: #79c0ff; }
     .json-string { color: #a5d6ff; }
     .json-number { color: #f8c555; }
@@ -354,6 +415,10 @@
         <span class="env-badge" id="env-badge" hidden>PROD</span>
       </div>
       <div class="header-actions">
+        <div id="tree-controls" hidden style="display:flex;gap:6px;">
+          <button class="btn-text" id="btn-expand-all">Expand all</button>
+          <button class="btn-text" id="btn-collapse-all">Collapse all</button>
+        </div>
         <button class="btn-icon" id="btn-refresh" title="Refresh">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
