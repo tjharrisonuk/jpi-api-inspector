@@ -228,13 +228,11 @@ function updateBackButton() {
   $('btn-back').hidden = !previousRequest;
 }
 
-// Called when a brand-new request arrives from the popup.
-// Saves the current view as "previous" so the back button can return to it.
+// Called when a new request arrives via the onChanged listener.
+// The popup has already written previousApiRequest to storage by this point.
 async function loadApiResponse(request) {
-  if (currentRequest) {
-    previousRequest = currentRequest;
-    await chrome.storage.local.set({ previousApiRequest: currentRequest });
-  }
+  const { previousApiRequest } = await chrome.storage.local.get('previousApiRequest');
+  previousRequest = previousApiRequest || null;
   await renderRequest(request);
   updateBackButton();
 }
@@ -340,6 +338,8 @@ $('btn-back').addEventListener('click', async () => {
   if (!previousRequest) return;
   const target    = previousRequest;
   previousRequest = null;
+  // Keep storage consistent so a panel reload still shows the right state
+  await chrome.storage.local.set({ apiRequest: target });
   await chrome.storage.local.remove('previousApiRequest');
   await renderRequest(target);
   updateBackButton();

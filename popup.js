@@ -31,7 +31,10 @@ async function openJsGlobalsInPanel(tabId, domain, path) {
     data = null;
   }
 
+  // Save current request as previous BEFORE overwriting it
+  const { apiRequest: current } = await chrome.storage.local.get('apiRequest');
   await chrome.storage.local.set({
+    previousApiRequest: current ?? null,
     apiRequest: {
       type: 'jsglobals',
       data,
@@ -48,7 +51,10 @@ async function openJsGlobalsInPanel(tabId, domain, path) {
 async function openApiInPanel(env, domain, path, tabId) {
   const apiUrl = buildApiUrl(env, domain, path);
 
+  // Save current request as previous BEFORE overwriting it
+  const { apiRequest: current } = await chrome.storage.local.get('apiRequest');
   await chrome.storage.local.set({
+    previousApiRequest: current ?? null,
     apiRequest: {
       url: apiUrl,
       env,
@@ -58,7 +64,6 @@ async function openApiInPanel(env, domain, path, tabId) {
     },
   });
 
-  // Open the side panel for the current tab
   await chrome.sidePanel.open({ tabId });
   window.close();
 }
