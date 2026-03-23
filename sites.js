@@ -8,6 +8,8 @@ const ALL_SITES = [
   'anguscountyworld.co.uk',
   'banburyguardian.co.uk',
   'bedfordtoday.co.uk',
+  'beta.expressandstar.com',
+  'beta.shropshirestar.com',
   'biggleswadetoday.co.uk',
   'birminghamworld.uk',
   'blackpoolgazette.co.uk',
