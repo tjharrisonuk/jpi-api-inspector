@@ -93,6 +93,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── Production site ──────────────────────────────────────────────────────
   if (ALL_SITES.includes(hostname)) {
     domain = hostname;
+
+    // beta.* hosts should resolve to their canonical production domain for API calls
+    if (domain.startsWith('beta.')) {
+      domain = domain.replace(/^beta\./, '');
+    }
   }
 
   // ── Feature branch ───────────────────────────────────────────────────────
