@@ -2,7 +2,7 @@
 // JPI API Inspector — Popup Logic
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FEATURE_BRANCH_RE = /^jpi-web-dev-(.+)\.brightsites\.co\.uk$/;
+const FEATURE_BRANCH_RE = /^jpi-web-(dev-.+|preprod)\.brightsites\.co\.uk$/;
 
 const $ = (id) => document.getElementById(id);
 
@@ -129,7 +129,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('detected-path').textContent = path;
 
   if (branchName) {
-    $('branch-name').textContent = `Feature branch: ${branchName}`;
+    const displayName = branchName === 'preprod' ? 'Preproduction branch' : `Feature branch: ${branchName.replace(/^dev-/, '')}`;
+    $('branch-name').textContent = displayName;
     $('branch-indicator').hidden = false;
   }
 
