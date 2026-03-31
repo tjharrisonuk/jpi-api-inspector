@@ -13,7 +13,8 @@
   "host_permissions": [
     "https://jpi-api-prod.brightsites.co.uk/*",
     "https://jpi-api-dev.brightsites.co.uk/*",
-    "https://*.brightsites.co.uk/*"
+    "https://*.brightsites.co.uk/*",
+    "http://localhost:8040/*"
   ],
   "action": {
     "default_popup": "popup.html",

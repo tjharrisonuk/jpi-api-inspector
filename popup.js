@@ -101,20 +101,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ── Feature branch ───────────────────────────────────────────────────────
-  else {
+  else if (FEATURE_BRANCH_RE.test(url.hostname)) {
     const branchMatch = url.hostname.match(FEATURE_BRANCH_RE);
-    if (branchMatch) {
-      branchName = branchMatch[1];
-      try {
-        const results = await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          world: 'MAIN',
-          func: () => window.JSGlobals && window.JSGlobals.domain,
-        });
-        domain = results?.[0]?.result || null;
-      } catch {
-        // scripting may fail on certain pages; leave domain as null
-      }
+    branchName = branchMatch[1];
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        world: 'MAIN',
+        func: () => window.JSGlobals && window.JSGlobals.domain,
+      });
+      domain = results?.[0]?.result || null;
+    } catch {
+      // scripting may fail on certain pages; leave domain as null
+    }
+  }
+
+  // ── Local development (localhost:8040) ───────────────────────────────────
+  else if (url.hostname === 'localhost' && url.port === '8040') {
+    branchName = 'local';
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        world: 'MAIN',
+        func: () => window.JSGlobals && window.JSGlobals.domain,
+      });
+      domain = results?.[0]?.result || null;
+    } catch {
+      // scripting may fail on certain pages; leave domain as null
     }
   }
 
@@ -129,7 +142,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('detected-path').textContent = path;
 
   if (branchName) {
-    const displayName = branchName === 'preprod' ? 'Preproduction branch' : `Feature branch: ${branchName.replace(/^dev-/, '')}`;
+    const displayName = branchName === 'preprod' ? 'Preproduction branch'
+      : branchName === 'local' ? 'Local development'
+      : `Feature branch: ${branchName.replace(/^dev-/, '')}`;
     $('branch-name').textContent = displayName;
     $('branch-indicator').hidden = false;
   }
