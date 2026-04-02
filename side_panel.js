@@ -190,6 +190,16 @@ function renderAdConfigCard(adConfigId, currentEnv) {
   card.hidden = false;
 }
 
+// ── Direct API link ───────────────────────────────────────────────────────────
+
+function renderApiLinkCard(url, currentEnv) {
+  const link = $('api-link');
+  link.href      = url;
+  link.className = `btn-adconfig ${currentEnv}`;
+  $('api-link-url').textContent = url;
+  $('api-link-card').hidden = false;
+}
+
 // ── Publication link ──────────────────────────────────────────────────────────
 
 function renderPublicationCard(domain, currentEnv) {
@@ -214,6 +224,7 @@ function showState(name) {
   if (name !== 'result') {
     $('adconfig-card').hidden     = true;
     $('publication-card').hidden  = true;
+    $('api-link-card').hidden     = true;
   }
 }
 
@@ -306,6 +317,9 @@ async function renderRequest(request) {
 
     // Publication quick link
     renderPublicationCard(domain, env);
+
+    // Direct API link
+    renderApiLinkCard(url, env);
 
     // Ad Config quick link
     const adConfigId = isJson ? findAdConfigId(data) : null;
