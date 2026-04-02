@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FEATURE_BRANCH_RE = /^jpi-web-(dev-.+|preprod)\.brightsites\.co\.uk$/;
+const API_RESPONSE_RE   = /^jpi-api-(prod|dev)\.brightsites\.co\.uk$/;
 
 const $ = (id) => document.getElementById(id);
 
@@ -16,7 +17,7 @@ function buildApiUrl(env, domain, path) {
   return `https://jpi-api-${env}.brightsites.co.uk/api/${domain}?path=${encodeURIComponent(path)}`;
 }
 
-async function openJsGlobalsInPanel(tabId, domain, path) {
+async function openJsGlobalsInPanel(tabId, domain, path, feUrl) {
   let data = null;
   try {
     const results = await chrome.scripting.executeScript({
@@ -40,6 +41,7 @@ async function openJsGlobalsInPanel(tabId, domain, path) {
       data,
       domain,
       path,
+      feUrl: feUrl || null,
       timestamp: Date.now(),
     },
   });
@@ -48,7 +50,7 @@ async function openJsGlobalsInPanel(tabId, domain, path) {
   window.close();
 }
 
-async function openApiInPanel(env, domain, path, tabId) {
+async function openApiInPanel(env, domain, path, tabId, feUrl) {
   const apiUrl = buildApiUrl(env, domain, path);
 
   // Save current request as previous BEFORE overwriting it
@@ -60,6 +62,7 @@ async function openApiInPanel(env, domain, path, tabId) {
       env,
       domain,
       path,
+      feUrl: feUrl || null,
       timestamp: Date.now(),
     },
   });
@@ -85,10 +88,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const hostname = url.hostname.replace(/^www\./, '');
-  const path = url.pathname || '/';
+  let path = url.pathname || '/';
 
-  let domain = null;
+  let domain    = null;
   let branchName = null;
+  let feUrl     = null;
 
   // ── Production site ──────────────────────────────────────────────────────
   if (ALL_SITES.includes(hostname)) {
@@ -98,6 +102,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (domain.startsWith('beta.')) {
       domain = domain.replace(/^beta\./, '');
     }
+
+    feUrl = `https://${url.hostname}${path}`;
   }
 
   // ── Feature branch ───────────────────────────────────────────────────────
@@ -114,6 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch {
       // scripting may fail on certain pages; leave domain as null
     }
+    feUrl = `https://${url.hostname}${path}`;
   }
 
   // ── Local development (localhost:8040) ───────────────────────────────────
@@ -128,6 +135,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       domain = results?.[0]?.result || null;
     } catch {
       // scripting may fail on certain pages; leave domain as null
+    }
+    feUrl = `http://localhost:8040${path}`;
+  }
+
+  // ── API response URL ─────────────────────────────────────────────────────
+  else if (API_RESPONSE_RE.test(url.hostname)) {
+    const pathMatch = url.pathname.match(/^\/api\/(.+)$/);
+    if (pathMatch) {
+      domain = pathMatch[1];
+      path   = url.searchParams.get('path') || '/';
+      feUrl  = `https://${domain}${path}`;
+      $('api-response-indicator').hidden = false;
     }
   }
 
@@ -152,12 +171,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   setState('detected');
 
   $('btn-prod').addEventListener('click', () =>
-    openApiInPanel('prod', domain, path, tab.id)
+    openApiInPanel('prod', domain, path, tab.id, feUrl)
   );
   $('btn-dev').addEventListener('click', () =>
-    openApiInPanel('dev', domain, path, tab.id)
+    openApiInPanel('dev', domain, path, tab.id, feUrl)
   );
   $('btn-jsglobals').addEventListener('click', () =>
-    openJsGlobalsInPanel(tab.id, domain, path)
+    openJsGlobalsInPanel(tab.id, domain, path, feUrl)
   );
 });

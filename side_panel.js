@@ -190,6 +190,17 @@ function renderAdConfigCard(adConfigId, currentEnv) {
   card.hidden = false;
 }
 
+// ── Front-end link ────────────────────────────────────────────────────────────
+
+function renderFeCard(feUrl, currentEnv) {
+  if (!feUrl) { $('fe-link-card').hidden = true; return; }
+  const link = $('fe-link');
+  link.href      = feUrl;
+  link.className = `btn-adconfig ${currentEnv || 'globals'}`;
+  $('fe-link-url').textContent = feUrl;
+  $('fe-link-card').hidden = false;
+}
+
 // ── Direct API link ───────────────────────────────────────────────────────────
 
 function renderApiLinkCard(url, currentEnv) {
@@ -224,6 +235,7 @@ function showState(name) {
   if (name !== 'result') {
     $('adconfig-card').hidden     = true;
     $('publication-card').hidden  = true;
+    $('fe-link-card').hidden      = true;
     $('api-link-card').hidden     = true;
   }
 }
@@ -280,6 +292,8 @@ async function renderRequest(request) {
       contentEl.textContent = 'JSGlobals is not defined on this page.';
     }
 
+    renderFeCard(request.feUrl || null, null);
+
     showState('result');
     return;
   }
@@ -317,6 +331,9 @@ async function renderRequest(request) {
 
     // Publication quick link
     renderPublicationCard(domain, env);
+
+    // Front-end link
+    renderFeCard(request.feUrl || null, env);
 
     // Direct API link
     renderApiLinkCard(url, env);
