@@ -180,6 +180,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setState('detected');
 
+  const sub = apiSubdomainFor(domain);
+  $('btn-prod-desc').textContent = `${sub}-prod.brightsites.co.uk`;
+  $('btn-dev-desc').textContent  = `${sub}-dev.brightsites.co.uk`;
+
   $('btn-prod').addEventListener('click', () =>
     openApiInPanel('prod', domain, path, tab.id, feUrl)
   );
