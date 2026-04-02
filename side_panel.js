@@ -172,7 +172,7 @@ function findAdConfigId(obj, depth = 0) {
   return null;
 }
 
-function renderAdConfigCard(adConfigId, currentEnv) {
+function renderAdConfigCard(adConfigId, currentEnv, apiSubdomain) {
   const card = $('adconfig-card');
   if (!adConfigId) {
     card.hidden = true;
@@ -181,7 +181,8 @@ function renderAdConfigCard(adConfigId, currentEnv) {
 
   $('adconfig-id').textContent = `#${adConfigId}`;
 
-  const url  = `https://jpi-api-${currentEnv}.brightsites.co.uk/api/ad-config/${adConfigId}`;
+  const base = apiSubdomain || 'jpi-api';
+  const url  = `https://${base}-${currentEnv}.brightsites.co.uk/api/ad-config/${adConfigId}`;
   const link = $('adconfig-link');
   link.href      = url;
   link.className = `btn-adconfig ${currentEnv}`;
@@ -213,8 +214,9 @@ function renderApiLinkCard(url, currentEnv) {
 
 // ── Publication link ──────────────────────────────────────────────────────────
 
-function renderPublicationCard(domain, currentEnv) {
-  const url  = `https://jpi-api-${currentEnv}.brightsites.co.uk/api/publications/${domain}`;
+function renderPublicationCard(domain, currentEnv, apiSubdomain) {
+  const base = apiSubdomain || 'jpi-api';
+  const url  = `https://${base}-${currentEnv}.brightsites.co.uk/api/publications/${domain}`;
   const link = $('publication-link');
   link.href      = url;
   link.className = `btn-adconfig ${currentEnv}`;
@@ -330,7 +332,7 @@ async function renderRequest(request) {
     $('response-time').textContent = `${elapsed}ms`;
 
     // Publication quick link
-    renderPublicationCard(domain, env);
+    renderPublicationCard(domain, env, request.apiSubdomain);
 
     // Front-end link
     renderFeCard(request.feUrl || null, env);
@@ -340,7 +342,7 @@ async function renderRequest(request) {
 
     // Ad Config quick link
     const adConfigId = isJson ? findAdConfigId(data) : null;
-    renderAdConfigCard(adConfigId, env);
+    renderAdConfigCard(adConfigId, env, request.apiSubdomain);
 
     // Render JSON tree
     const contentEl = $('json-content');

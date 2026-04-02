@@ -3,7 +3,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FEATURE_BRANCH_RE = /^jpi-web-(dev-.+|preprod)\.brightsites\.co\.uk$/;
-const API_RESPONSE_RE   = /^jpi-api-(prod|dev)\.brightsites\.co\.uk$/;
+const API_RESPONSE_RE   = /^(?:jpi|indy)-api-(prod|dev)\.brightsites\.co\.uk$/;
+
+const DOMAIN_API_SUBDOMAIN = {
+  'independent.co.uk': 'indy-api',
+};
+
+function apiSubdomainFor(domain) {
+  return DOMAIN_API_SUBDOMAIN[domain] || 'jpi-api';
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -14,7 +22,7 @@ function setState(name) {
 }
 
 function buildApiUrl(env, domain, path) {
-  return `https://jpi-api-${env}.brightsites.co.uk/api/${domain}?path=${encodeURIComponent(path)}`;
+  return `https://${apiSubdomainFor(domain)}-${env}.brightsites.co.uk/api/${domain}?path=${encodeURIComponent(path)}`;
 }
 
 async function openJsGlobalsInPanel(tabId, domain, path, feUrl) {
@@ -63,6 +71,7 @@ async function openApiInPanel(env, domain, path, tabId, feUrl) {
       domain,
       path,
       feUrl: feUrl || null,
+      apiSubdomain: apiSubdomainFor(domain),
       timestamp: Date.now(),
     },
   });
