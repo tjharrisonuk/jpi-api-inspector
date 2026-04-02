@@ -395,6 +395,31 @@
 
     .btn-adconfig:hover { opacity: 0.8; }
 
+    .btn-copy {
+      background: none;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-copy:hover {
+      background: #21262d;
+      color: #e6edf3;
+    }
+
+    .btn-copy.copied {
+      color: #4ade80;
+      border-color: rgba(22, 163, 74, 0.4);
+    }
+
     .btn-adconfig.prod {
       background: rgba(220, 38, 38, 0.15);
       color: #f87171;
@@ -485,6 +510,9 @@
         </div>
         <div class="adconfig-actions">
           <a class="btn-adconfig" id="publication-link" href="#" target="_blank">View →</a>
+          <button class="btn-copy" data-copy-from="publication-link" title="Copy URL">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          </button>
         </div>
       </div>
 
@@ -497,6 +525,9 @@
         </div>
         <div class="adconfig-actions">
           <a class="btn-adconfig" id="adconfig-link" href="#" target="_blank">Ad Config →</a>
+          <button class="btn-copy" data-copy-from="adconfig-link" title="Copy URL">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          </button>
         </div>
       </div>
 
@@ -509,6 +540,9 @@
         </div>
         <div class="adconfig-actions">
           <a class="btn-adconfig" id="fe-link" href="#" target="_blank">View →</a>
+          <button class="btn-copy" data-copy-from="fe-link" title="Copy URL">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          </button>
         </div>
       </div>
 
@@ -521,6 +555,9 @@
         </div>
         <div class="adconfig-actions">
           <a class="btn-adconfig" id="api-link" href="#" target="_blank">Open →</a>
+          <button class="btn-copy" data-copy-from="api-link" title="Copy URL">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          </button>
         </div>
       </div>
 
