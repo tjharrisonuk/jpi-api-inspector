@@ -49,6 +49,7 @@ const ALL_SITES = [
   'meltontimes.co.uk',
   'miltonkeynes.co.uk',
   'independent.co.uk',
+  'standard.co.uk',
   'nationalworld.com',
   'newcastleworld.com',
   'newryreporter.com',

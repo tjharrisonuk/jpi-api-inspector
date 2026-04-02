@@ -3,10 +3,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FEATURE_BRANCH_RE = /^jpi-web-(dev-.+|preprod)\.brightsites\.co\.uk$/;
-const API_RESPONSE_RE   = /^(?:jpi|indy)-api-(prod|dev)\.brightsites\.co\.uk$/;
+const API_RESPONSE_RE   = /^(?:jpi|indy|standard)-api-(prod|dev)\.brightsites\.co\.uk$/;
 
 const DOMAIN_API_SUBDOMAIN = {
   'independent.co.uk': 'indy-api',
+  'standard.co.uk':    'standard-api',
 };
 
 function apiSubdomainFor(domain) {
