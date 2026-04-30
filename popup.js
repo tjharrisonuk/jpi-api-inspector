@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ── API response URL ─────────────────────────────────────────────────────
   else if (API_RESPONSE_RE.test(url.hostname)) {
-    const pathMatch = url.pathname.match(/^\/api\/(.+)$/);
+    const pathMatch = url.pathname.match(/^\/api\/([^/]+)$/);
     if (pathMatch) {
       domain = pathMatch[1];
       path   = url.searchParams.get('path') || '/';

@@ -41,6 +41,7 @@ const ALL_SITES = [
   'leicestershireworld.com',
   'leightonbuzzardonline.co.uk',
   'lep.co.uk',
+  'letterkennylive.ie',
   'lincolnshireworld.com',
   'liverpoolworld.uk',
   'londonworld.com',
