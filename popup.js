@@ -2,7 +2,7 @@
 // JPI API Inspector — Popup Logic
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FEATURE_BRANCH_RE = /^jpi-web-(dev(?:-.+)?|preprod)\.brightsites\.co\.uk$/;
+const FEATURE_BRANCH_RE = /^jpi-web-(.+)\.brightsites\.co\.uk$/;
 const API_RESPONSE_RE   = /^(?:jpi|indy|standard)-api-(prod|dev)\.brightsites\.co\.uk$/;
 
 const DOMAIN_API_SUBDOMAIN = {
